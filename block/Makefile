@@ -24,8 +24,9 @@ obj-$(CONFIG_IOSCHED_ZEN)	+= zen-iosched.o
 obj-$(CONFIG_IOSCHED_SIOPLUS)   += sioplus-iosched.o
 obj-$(CONFIG_IOSCHED_TRIPNDROID)	+= tripndroid-iosched.o
 obj-$(CONFIG_IOSCHED_FIFO)	+= fifo-iosched.o
+obj-$(CONFIG_IOSCHED_SWITCHER) += iosched_switcher.o
 
 obj-$(CONFIG_BLOCK_COMPAT)	+= compat_ioctl.o
 obj-$(CONFIG_BLK_DEV_INTEGRITY)	+= blk-integrity.o
 
-ccflags-y := -O3
+ccflags-y := -Ofast
