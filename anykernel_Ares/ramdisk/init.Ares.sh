@@ -47,7 +47,6 @@ if [ "$(grep -c Ares-Kernel- /proc/version)" -eq "1" ]; then
      echo 0 > /sys/module/intelli_plug/parameters/nr_run_profile_sel 
      echo 0 > /sys/module/lazyplug/parameters/lazyplug_active
      echo 8 > /sys/module/lazyplug/parameters/nr_run_hysteresis
-     echo 0 > /sys/module/auto_hotplug/parameters/min_online_cpus
 
     # Thermal
      echo 0 > /sys/module/msm_thermal/vdd_restriction/enabled
@@ -70,7 +69,7 @@ if [ "$(grep -c Ares-Kernel- /proc/version)" -eq "1" ]; then
     # VM
      echo 0 > /proc/sys/vm/oom_dump_tasks
      echo 10 > /proc/sys/vm/dirty_background_ratio
-     echo 50 > /proc/sys/vm/swappiness
+     echo 130 > /proc/sys/vm/swappiness
      echo 100 > /proc/sys/vm/vfs_cache_pressure
      echo 30 > /proc/sys/vm/dirty_ratio
      echo 0 > /proc/sys/vm/page-cluster
@@ -78,10 +77,10 @@ if [ "$(grep -c Ares-Kernel- /proc/version)" -eq "1" ]; then
     # IO
      echo 1 > /sys/block/mmcblk0/queue/rq_affinity
      echo 0 > /sys/block/mmcblk0/queue/iostats
-     echo 1024 > /sys/block/mmcblk0/queue/read_ahead_kb
+     echo 512 > /sys/block/mmcblk0/queue/read_ahead_kb
      echo 1 > /sys/block/mmcblk1/queue/rq_affinity
      echo 0 > /sys/block/mmcblk1/queue/iostats
-     echo 2048 > /sys/block/mmcblk1/queue/read_ahead_kb
+     echo 1024 > /sys/block/mmcblk1/queue/read_ahead_kb
 
     # Misc
      echo 320 > /proc/sys/kernel/random/read_wakeup_threshold
