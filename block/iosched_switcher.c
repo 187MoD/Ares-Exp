@@ -49,10 +49,9 @@ static void change_elevator(struct req_queue_data *r, bool use_noop)
 	spin_unlock_irq(q->queue_lock);
 
 	if (use_noop) {
-		if (strcmp(name, NOOP_IOSCHED)) {
-			strcpy(r->prev_e, name);
+		strcpy(r->prev_e, name);
+		if (strcmp(name, NOOP_IOSCHED))
 			elevator_change(q, NOOP_IOSCHED);
-		}
 	} else {
 		if (!strcmp(name, NOOP_IOSCHED))
 			elevator_change(q, r->prev_e);
@@ -73,7 +72,6 @@ static int fb_notifier_callback(struct notifier_block *nb,
 	struct fb_event *evdata = data;
 	int *blank = evdata->data;
 
-	/* Parse framebuffer events as soon as they occur */
 	if (action != FB_EVENT_BLANK)
 		return NOTIFY_OK;
 
