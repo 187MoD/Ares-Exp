@@ -49,7 +49,7 @@ chmod -R 750 $ramdisk/*;
 chown -R root:root $ramdisk/*;
 
 chmod 775 $ramdisk/sbin
-chmod 755 $ramdisk/sbin/busybox
+chmod 755 $ramdisk/sbin/*;
 
 ## AnyKernel install
 
@@ -60,12 +60,12 @@ android_ver=$(file_getprop /system/build.prop "ro.build.version.release");
 ui_print " ";
 ui_print "Android $android_ver detected...";
 case "$android_ver" in
-8.1.0|9) support_status="supported";;
+7.0|7.1|8.0|8.1|9|10) support_status="supported";;
   *) support_status="unsupported";;
 esac;
 ui_print " ";
 if [ ! "$support_status" == "supported" ]; then
-  ui_print "This version of Ares-Kernel is only compatible with android versions 8.1.0 & 9!";
+  ui_print "This version of Ares-Kernel is only compatible with android versions 7.0 & 7.1 & 8.0 & 8.1 & 9 & 10!";
   exit 1;
 fi;
 

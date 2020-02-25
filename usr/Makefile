@@ -21,6 +21,9 @@ suffix_$(CONFIG_INITRAMFS_COMPRESSION_XZ)     = .xz
 # Lzo
 suffix_$(CONFIG_INITRAMFS_COMPRESSION_LZO)   = .lzo
 
+# Lzo
+suffix_$(CONFIG_INITRAMFS_COMPRESSION_LZ4)   = .lz4
+
 AFLAGS_initramfs_data.o += -DINITRAMFS_IMAGE="usr/initramfs_data.cpio$(suffix_y)"
 
 # Generate builtin.o based on initramfs_data.o
@@ -66,4 +69,5 @@ $(deps_initramfs): klibcdirs
 $(obj)/initramfs_data.cpio$(suffix_y): $(obj)/gen_init_cpio $(deps_initramfs) klibcdirs
 	$(Q)$(initramfs) -l $(ramfs-input) > $(obj)/.initramfs_data.cpio.d
 	$(call if_changed,initfs)
+
 

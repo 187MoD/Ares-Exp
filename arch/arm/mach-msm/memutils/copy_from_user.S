@@ -130,4 +130,5 @@ ENDPROC(__copy_from_user)
 	bl	__memzero
 	ldr	r0, [sp], #4
 	copy_abort_end
-.popsection
+	.popsection
+

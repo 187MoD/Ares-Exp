@@ -134,4 +134,3 @@ ENDPROC(__copy_to_user_std)
 	copy_abort_end
 	.popsection
 
-

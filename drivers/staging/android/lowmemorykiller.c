@@ -47,7 +47,9 @@
 #include <linux/cpuset.h>
 #include <linux/show_mem_notifier.h>
 #include <linux/vmpressure.h>
+#ifdef CONFIG_ZCACHE
 #include <linux/zcache.h>
+#endif
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/almk.h>
@@ -396,8 +398,13 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 	other_free = global_page_state(NR_FREE_PAGES) - totalreserve_pages;
 
 	if (global_page_state(NR_SHMEM) + total_swapcache_pages() <
+#ifdef CONFIG_ZCACHE
 		global_page_state(NR_FILE_PAGES) + zcache_pages())
 		other_file = global_page_state(NR_FILE_PAGES) + zcache_pages() -
+#else
+		global_page_state(NR_FILE_PAGES))
+		other_file = global_page_state(NR_FILE_PAGES) -
+#endif /* CONFIG_ZCACHE */
 						global_page_state(NR_SHMEM) -
 						global_page_state(NR_UNEVICTABLE) -
 						total_swapcache_pages();
@@ -520,7 +527,9 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 				   (long)(PAGE_SIZE / 1024),
 				global_page_state(NR_FILE_PAGES) *
 				   (long)(PAGE_SIZE / 1024),
+#ifdef CONFIG_ZCACHE
 				(long)zcache_pages() * (long)(PAGE_SIZE / 1024),
+#endif
 				global_page_state(NR_SLAB_RECLAIMABLE) *
 				   (long)(PAGE_SIZE / 1024),
 				global_page_state(NR_SLAB_UNRECLAIMABLE) *

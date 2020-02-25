@@ -1,4 +1,6 @@
 ccflags-y := -Iinclude/uapi/drm -Iinclude/drm -Idrivers/gpu/msm
+ccflags-y += $(call cc-option, -funroll-loops,)
+ccflags-y += $(call cc-option, -ffast-math,)
 
 msm_kgsl_core-y = \
 	kgsl.o \
@@ -47,3 +49,5 @@ msm_z180-objs = $(msm_z180-y)
 obj-$(CONFIG_MSM_KGSL) += msm_kgsl_core.o
 obj-$(CONFIG_MSM_KGSL) += msm_adreno.o
 obj-$(CONFIG_MSM_KGSL_2D) += msm_z180.o
+
+

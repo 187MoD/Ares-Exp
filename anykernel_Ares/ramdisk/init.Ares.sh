@@ -47,11 +47,12 @@ if [ "$(grep -c Ares-Kernel- /proc/version)" -eq "1" ]; then
      echo 0 > /sys/module/intelli_plug/parameters/nr_run_profile_sel 
      echo 0 > /sys/module/lazyplug/parameters/lazyplug_active
      echo 8 > /sys/module/lazyplug/parameters/nr_run_hysteresis
+     echo 0 > /sys/module/auto_hotplug/parameters/min_online_cpus
 
     # Thermal
      echo 0 > /sys/module/msm_thermal/vdd_restriction/enabled
      echo 0 > /sys/module/msm_thermal/parameters/enabled
-     echo 0 > /sys/module/msm_thermal/core_control/enabled
+     echo 1 > /sys/module/msm_thermal/core_control/enabled
      echo 80 > /sys/module/msm_thermal/parameters/freq_mitig_temp_degc
      echo 90 > /sys/module/msm_thermal/parameters/core_temp_limit_degC
      echo 85 > /sys/module/msm_thermal/parameters/hotplug_temp_degC
@@ -69,7 +70,7 @@ if [ "$(grep -c Ares-Kernel- /proc/version)" -eq "1" ]; then
     # VM
      echo 0 > /proc/sys/vm/oom_dump_tasks
      echo 10 > /proc/sys/vm/dirty_background_ratio
-     echo 60 > /proc/sys/vm/swappiness
+     echo 50 > /proc/sys/vm/swappiness
      echo 100 > /proc/sys/vm/vfs_cache_pressure
      echo 30 > /proc/sys/vm/dirty_ratio
      echo 0 > /proc/sys/vm/page-cluster
@@ -83,8 +84,8 @@ if [ "$(grep -c Ares-Kernel- /proc/version)" -eq "1" ]; then
      echo 2048 > /sys/block/mmcblk1/queue/read_ahead_kb
 
     # Misc
-     echo 256 > /proc/sys/kernel/random/read_wakeup_threshold
-     echo 320 > /proc/sys/kernel/random/write_wakeup_threshold
+     echo 320 > /proc/sys/kernel/random/read_wakeup_threshold
+     echo 512 > /proc/sys/kernel/random/write_wakeup_threshold
      echo 0 > /sys/kernel/dyn_fsync/Dyn_fsync_active
 
 

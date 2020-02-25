@@ -22,11 +22,14 @@
 #include <asm/div64.h>
 #include <asm/cputime.h>
 
+#define CPU_VDD_MIN	 	500
 #define CPU_VDD_MAX		1400
-#define FREQ_STEPS		52
+#define FREQ_STEPS		56
 #define FREQ_TABLE_SIZE_OFFSET	8
-#define CPUFREQ_NAME_LEN 17
+#define CPUFREQ_NAME_LEN 	17
 #define CPUINFO_MAX_FREQ_LIMIT	3072000
+
+extern unsigned int kthermal_limit;
 
 
 /*********************************************************************
@@ -295,7 +298,6 @@ extern unsigned int limited_max_freq;
 
 static inline void cpufreq_verify_within_limits(struct cpufreq_policy *policy, unsigned int min, unsigned int max)
 {
-
 #ifdef CONFIG_MSM_CPUFREQ_LIMITER
 	max = min(limited_max_freq, max);
 #endif
@@ -355,6 +357,15 @@ int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu);
 struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy);
 int cpufreq_update_policy(unsigned int cpu);
 bool have_governor_per_policy(void);
+
+#ifdef CONFIG_MSM_LIMITER
+int cpufreq_set_gov(char *target_gov, unsigned int cpu);
+char *cpufreq_get_gov(unsigned int cpu);
+int cpufreq_set_freq(unsigned int max_freq, unsigned int min_freq,
+			unsigned int cpu);
+int cpufreq_get_max(unsigned int cpu);
+int cpufreq_get_min(unsigned int cpu);
+#endif
 
 #ifdef CONFIG_CPU_FREQ
 /* query the current CPU frequency (in kHz). If zero, cpufreq couldn't detect it */

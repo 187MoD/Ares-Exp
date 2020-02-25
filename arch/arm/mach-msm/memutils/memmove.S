@@ -63,6 +63,7 @@ ENTRY(memmove)
 	PLD(	pld	[r1, #-196]		)
 
 3:	PLD(	pld	[r1, #-260]		)
+
 4:		ldmdb	r1!, {r3, r4, r5, r6, r7, r8, ip, lr}
 		subs	r2, r2, #32
 		stmdb	r0!, {r3, r4, r5, r6, r7, r8, ip, lr}
@@ -196,5 +197,3 @@ ENTRY(memmove)
 18:		backward_copy_shift	push=24	pull=8
 
 ENDPROC(memmove)
-
-

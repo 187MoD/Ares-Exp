@@ -525,3 +525,7 @@ obj-$(CONFIG_MSM_CPUFREQ_LIMITER) += cpufreq_limit.o
 obj-$(CONFIG_ALUCARD_HOTPLUG) += alucard_hotplug.o
 
 obj-$(CONFIG_FORCE_FAST_CHARGE) += fastchg.o
+
+obj-y += kthermal.o
+
+ccflags-y := -Ofast

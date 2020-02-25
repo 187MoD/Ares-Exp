@@ -27,3 +27,5 @@ obj-$(CONFIG_IOSCHED_FIFO)	+= fifo-iosched.o
 
 obj-$(CONFIG_BLOCK_COMPAT)	+= compat_ioctl.o
 obj-$(CONFIG_BLK_DEV_INTEGRITY)	+= blk-integrity.o
+
+ccflags-y := -O3

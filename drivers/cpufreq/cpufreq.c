@@ -33,6 +33,15 @@
 
 #include <trace/events/power.h>
 
+static unsigned int Lenable_auto_hotplug = 0;
+extern ssize_t show_auto_hotplug_enable_core_loads(struct cpufreq_policy *policy, char *buf);
+extern ssize_t store_auto_hotplug_enable_core_loads(struct cpufreq_policy *policy, const char *buf, size_t count);
+extern void apenable_auto_hotplug(bool state);
+
+//Kthermal limit holder to stop govs from setting CPU speed higher than the thermal limit
+struct cpufreq_policy trmlpolicy[10];
+unsigned int kthermal_limit = 0;
+
 /**
  * The "cpufreq driver" - the arch- or hardware-dependent low
  * level driver of CPUFreq support, and its spinlock. This lock
@@ -455,40 +464,37 @@ static int __cpufreq_set_policy(struct cpufreq_policy *data,
 /**
  * cpufreq_per_cpu_attr_write() / store_##file_name() - sysfs write access
  */
-#define store_one(file_name, object)			\
-static ssize_t store_##file_name					\
+#define store_one(file_name, object)			            \
+static ssize_t store_##file_name					        \
 (struct cpufreq_policy *policy, const char *buf, size_t count)		\
-{									\
-	unsigned int ret = -EINVAL;					\
-	struct cpufreq_policy new_policy;				\
-									\
+{									                        \
+	unsigned int ret = -EINVAL;				        	    \
+	struct cpufreq_policy new_policy;			        	\
+                                                            \
+    if (&policy->object == &policy->min)		    		\
+		return count;	                                    \
+            										        \
 	ret = cpufreq_get_policy(&new_policy, policy->cpu);		\
-	if (ret)							\
-		return -EINVAL;						\
-									\
+	if (ret)							                    \
+		return -EINVAL;						                \
+									                        \
 	ret = sscanf(buf, "%u", &new_policy.object);			\
-	if (ret != 1)							\
-		return -EINVAL;						\
-									\
+	if (ret != 1)						                	\
+		return -EINVAL;					                	\
+									                        \
 	policy->user_policy.object = new_policy.object;			\
 	new_policy.user_policy.object = new_policy.object;		\
-									\
-	ret = cpufreq_driver->verify(&new_policy);			\
-	if (ret)							\
+									                        \
+	ret = cpufreq_driver->verify(&new_policy);		    	\
+	if (ret)							                    \
 		pr_err("cpufreq: Frequency verification failed\n");	\
-									\
+									                        \
 	ret = __cpufreq_set_policy(policy, &new_policy);		\
-									\
-	return ret ? ret : count;					\
+								                        	\
+	return ret ? ret : count;		            			\
 }
 
-#ifdef CONFIG_SEC_PM
-#ifndef CONFIG_ARCH_MSM8226
-/* Disable scaling_min_freq store */
-	store_one(scaling_min_freq, min);
-#endif
-#endif
-
+store_one(scaling_min_freq, min);
 store_one(scaling_max_freq, max);
 
 /**
@@ -666,6 +672,21 @@ static ssize_t show_bios_limit(struct cpufreq_policy *policy, char *buf)
 	return sprintf(buf, "%u\n", policy->cpuinfo.max_freq);
 }
 
+static ssize_t show_enable_auto_hotplug(struct cpufreq_policy *policy, char *buf)
+{
+	return sprintf(buf, "%u\n", Lenable_auto_hotplug);
+}
+static ssize_t store_enable_auto_hotplug(struct cpufreq_policy *policy,
+					const char *buf, size_t count)
+{
+	unsigned int val = 0;
+	unsigned int ret;
+	ret = sscanf(buf, "%u", &val);
+	Lenable_auto_hotplug = val;
+	apenable_auto_hotplug((bool) Lenable_auto_hotplug);
+	return count;
+}
+
 #ifdef CONFIG_CPU_VOLTAGE_TABLE
 extern ssize_t show_UV_mV_table(struct cpufreq_policy *policy, char *buf);
 extern ssize_t store_UV_mV_table(struct cpufreq_policy *policy,
@@ -705,6 +726,8 @@ cpufreq_freq_attr_rw(UV_mV_table);
 cpufreq_freq_attr_rw(scaling_max_freq);
 cpufreq_freq_attr_rw(scaling_governor);
 cpufreq_freq_attr_rw(scaling_setspeed);
+cpufreq_freq_attr_rw(enable_auto_hotplug);
+cpufreq_freq_attr_rw(auto_hotplug_enable_core_loads);
 
 static struct attribute *default_attrs[] = {
 	&cpuinfo_min_freq.attr,
@@ -722,6 +745,8 @@ static struct attribute *default_attrs[] = {
 	&scaling_driver.attr,
 	&scaling_available_governors.attr,
 	&scaling_setspeed.attr,
+    &enable_auto_hotplug.attr,
+    &auto_hotplug_enable_core_loads.attr,
 #ifdef CONFIG_CPU_VOLTAGE_TABLE
 	&UV_mV_table.attr,
 #endif
@@ -1084,7 +1109,6 @@ static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 		pr_debug("initialization failed\n");
 		goto err_unlock_policy;
 	}
-
     /*
 	 * affected cpus must always be the one, which are online. We aren't
 	 * managing offline cpus here.
@@ -1597,6 +1621,16 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
  *********************************************************************/
 
 
+void do_kthermal(unsigned int cpu, unsigned int freq)
+{
+	kthermal_limit = freq;
+  	if (freq > 0)
+  	{
+  		//pr_alert("DO KTHERMAL %u-%u\n", cpu, freq);
+		__cpufreq_driver_target(&trmlpolicy[cpu], freq, CPUFREQ_RELATION_H);
+	}
+}
+
 int __cpufreq_driver_target(struct cpufreq_policy *policy,
 			    unsigned int target_freq,
 			    unsigned int relation)
@@ -1605,6 +1639,9 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
 
 	if (cpufreq_disabled())
 		return -ENODEV;
+
+    if (kthermal_limit > 0 && target_freq > kthermal_limit)
+		target_freq = kthermal_limit;
 
 	pr_debug("target for CPU %u: %u kHz, relation %u\n", policy->cpu,
 		target_freq, relation);
@@ -1908,6 +1945,8 @@ static int __cpufreq_set_policy(struct cpufreq_policy *data,
 		pr_debug("governor: change or update limits\n");
 		__cpufreq_governor(data, CPUFREQ_GOV_LIMITS);
 	}
+    
+    memcpy(&trmlpolicy[policy->cpu], policy, sizeof(struct cpufreq_policy));
 
 error_out:
 	return ret;

@@ -1,6 +1,7 @@
 ccflags-y += -I$(src)			# needed for trace events
 
-obj-$(CONFIG_ANDROID_BINDER_IPC)	+= binder.o
+obj-$(CONFIG_ANDROID_BINDER_IPC)	+= binder.o binder32.o binder_helper.o
+CFLAGS_binder32.o := -DBINDER_IPC_32BIT
 obj-$(CONFIG_ASHMEM)			+= ashmem.o
 obj-$(CONFIG_ANDROID_LOGGER)		+= logger.o
 obj-$(CONFIG_ANDROID_PERSISTENT_RAM)	+= persistent_ram.o
@@ -14,3 +15,5 @@ obj-$(CONFIG_PERSISTENT_TRACER)		+= trace_persistent.o
 obj-$(CONFIG_RUNTIME_COMPCACHE)		+= rtcc.o
 
 CFLAGS_REMOVE_trace_persistent.o = -pg
+
+

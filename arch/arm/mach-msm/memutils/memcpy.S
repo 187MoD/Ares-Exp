@@ -77,5 +77,3 @@ ENTRY(memcpy)
 #include "copy_template.S"
 
 ENDPROC(memcpy)
-
-
