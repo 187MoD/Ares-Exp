@@ -16,5 +16,4 @@ obj-$(CONFIG_RUNTIME_COMPCACHE)		+= rtcc.o
 
 CFLAGS_REMOVE_trace_persistent.o = -pg
 
-ccflags-y := -Ofast
 
