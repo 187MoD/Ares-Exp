@@ -52,7 +52,7 @@ KERNEL_NAME="Ares-Kernel"
 
 KERNEL_VARIANT="kltedv"	# options: klte, kltekor, kltedv, klteduos, kltekdi & all (build all the variants)
 
-KERNEL_VERSION="Beta~Exp.v1.0.3-"   # leave as such, if no specific version tag
+KERNEL_VERSION="Beta~Exp.v1.0.0-"   # leave as such, if no specific version tag
 
 KERNEL_DEFCONFIG="Ares_@$KERNEL_VARIANT@_defconfig"
 
