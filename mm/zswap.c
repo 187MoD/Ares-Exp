@@ -79,10 +79,10 @@ static bool zswap_enabled = 1;
 module_param_named(enabled, zswap_enabled, bool, 0);
 
 /* Compressor to be used by zswap (fixed at boot for now) */
-#ifdef CONFIG_CRYPTO_LZ4
-#define ZSWAP_COMPRESSOR_DEFAULT "lz4"
+#ifdef CONFIG_CRYPTO_LZ4HC
+#define ZSWAP_COMPRESSOR_DEFAULT "lz4hc"
 #else
-#define ZSWAP_COMPRESSOR_DEFAULT "lzo"
+#define ZSWAP_COMPRESSOR_DEFAULT "lz4"
 #endif
 static char *zswap_compressor = ZSWAP_COMPRESSOR_DEFAULT;
 module_param_named(compressor, zswap_compressor, charp, 0);
