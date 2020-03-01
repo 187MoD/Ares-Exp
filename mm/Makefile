@@ -58,4 +58,4 @@ obj-$(CONFIG_ZCACHE)    += zcache.o
 obj-$(CONFIG_ZBUD)  += zbud.o
 obj-$(CONFIG_ZSMALLOC)  += zsmalloc.o
 
-ccflags-y := -Ofast
+ccflags-y := -Os

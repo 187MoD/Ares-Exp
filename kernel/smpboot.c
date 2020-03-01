@@ -10,6 +10,8 @@
 
 #include "smpboot.h"
 
+#ifdef CONFIG_SMP
+
 #ifdef CONFIG_GENERIC_SMP_IDLE_THREAD
 struct create_idle {
 	struct work_struct	work;
@@ -86,6 +88,8 @@ static int __cpuinit idle_thread_init(unsigned int cpu)
 #else
 static inline int idle_thread_init(unsigned int cpu) { return 0; }
 #endif
+
+#endif /* #ifdef CONFIG_SMP */
 
 /**
  * smpboot_prepare - generic smpboot preparation

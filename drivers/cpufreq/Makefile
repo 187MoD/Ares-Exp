@@ -74,6 +74,7 @@ obj-$(CONFIG_MSM_DCVS)			+= cpufreq_gov_msm.o
 
 obj-$(CONFIG_LAZYPLUG)			+= lazyplug.o
 CFLAGS_lazyplug.o			+= -finline-functions
-ccflags-y := -Ofast
+
+ccflags-y := -Os
 
 
