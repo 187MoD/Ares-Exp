@@ -88,7 +88,7 @@ static char *zswap_compressor = ZSWAP_COMPRESSOR_DEFAULT;
 module_param_named(compressor, zswap_compressor, charp, 0);
 
 /* The maximum percentage of memory that the compressed pool can occupy */
-static unsigned int zswap_max_pool_percent = 20;
+static unsigned int zswap_max_pool_percent = 10;
 module_param_named(max_pool_percent,
 			zswap_max_pool_percent, uint, 0644);
 
@@ -97,7 +97,7 @@ module_param_named(max_pool_percent,
  * compressed page. Any pages that do not compress by at least
  * this ratio will be rejected.
 */
-static unsigned int zswap_max_compression_ratio = 80;
+static unsigned int zswap_max_compression_ratio = 90;
 module_param_named(max_compression_ratio,
 			zswap_max_compression_ratio, uint, 0644);
 
