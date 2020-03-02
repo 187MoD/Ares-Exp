@@ -137,7 +137,7 @@ config IOSCHED_SWITCHER
 	  original I/O scheduler after a delay when the screen is turned back
 	  on. It requires being manually initialized from a different driver
 	  in order to grab the request_queue pointer that should have its I/O
-	  scheduler switched to Noop when the screen turns off
+	  scheduler switched to Noop when the screen turns off.
 
 choice
 	prompt "Default I/O scheduler"

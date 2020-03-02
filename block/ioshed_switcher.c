@@ -130,4 +130,4 @@ static int iosched_switcher_core_init(void)
 
 	return 0;
 }
-late_initcall(iosched_switcher_core_init);
+late_initcall(iosched_switcher_core_init)
