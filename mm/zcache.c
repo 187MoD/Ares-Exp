@@ -49,11 +49,11 @@ module_param_named(enabled, zcache_enabled, bool, 0);
  * Compressor to be used by zcache
  */
 #define ZCACHE_COMPRESSOR_DEFAULT "lz4hc"
-#ifndef CONFIG_CRYPTO_LZ4
+//#ifndef CONFIG_CRYPTO_LZ4
 #ifndef CONFIG_CRYPTO_LZ4HC
 static char *zcache_compressor = ZCACHE_COMPRESSOR_DEFAULT;
-#else
-static char *zcache_compressor = "lz4";
+//#else
+//static char *zcache_compressor = "lz4";
 #else
 static char *zcache_compressor = "lz4hc";
 #endif
