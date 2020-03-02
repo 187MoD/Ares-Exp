@@ -429,9 +429,9 @@ config PGTABLE_MAPPING
 config ZSWAP
 	bool "In-kernel swap page compression"
 	depends on FRONTSWAP && CRYPTO
-	select CRYPTO_LZO
+	select CRYPTO_LZ4HC
 	select ZSMALLOC_NEW
-	default n
+	default y
 	help
 	  Zswap is a backend for the frontswap mechanism in the VMM.
 	  It receives pages from frontswap and attempts to store them
@@ -444,7 +444,7 @@ config ZSWAP
 config SWAP_ENABLE_READAHEAD
 	bool "Enable readahead on page swap in"
 	depends on SWAP
-	default y
+	default n
 	help
 	  When a page fault occurs, adjacent pages of SWAP_CLUSTER_MAX are
 	  also paged in expecting those pages will be used in near future.
@@ -459,22 +459,22 @@ config ZSWAP_ENABLE_WRITEBACK
 config DIRECT_RECLAIM_FILE_PAGES_ONLY
 	bool "Reclaim file pages only on direct reclaim path"
 	depends on ZSWAP
-	default n
+	default y
 
 config INCREASE_MAXIMUM_SWAPPINESS
 	bool "Allow swappiness to be set up to 200"
 	depends on ZSWAP
-	default n
+	default y
 
 config FIX_INACTIVE_RATIO
 	bool "Fix active:inactive anon ratio to 1:1"
 	depends on ZSWAP
-	default n
+	default y
 
 config TIGHT_PGDAT_BALANCE
 	bool "Set more tight balanced condition to kswapd"
 	depends on ZSWAP
-	default n
+	default y
 
 config MEMORY_HOLE_CARVEOUT
         bool
