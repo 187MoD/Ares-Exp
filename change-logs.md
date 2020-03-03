@@ -3,13 +3,13 @@
 ## Beta-v1.7  Jan 08. 2020
 ## First Update Since Aug 26
 ####
-*Up-to-date with Lineage-OS sources as of 01.01.2020 ?
+*Up-to-date with Lineage-OS sources as of 01.01.2020 
 *Compiled with "Bleeding-Edge-Toolchain" 9.2
 *Update Intelli-plug to version 3.9 (Compliments of Pascua28)
 **Disable CPU Freq Limit ?
-*sound: Compile with -Os optimization ?
-*SELinux: Allow Unknown ?
-**Fix VNSwap (pascua28) ?
+*sound: Compile with -Os optimization
+*SELinux: Allow Unknown
+**Fix VNSwap (pascua28)
 *A few other optimizations
 
 ## Beta-v1.6  Aug 08. 2019
