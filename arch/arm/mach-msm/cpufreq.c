@@ -320,6 +320,13 @@ static unsigned int msm_cpufreq_get_freq(unsigned int cpu)
 	return acpuclk_get_rate(cpu);
 }
 
+static void bootboost_stop(struct work_struct *work)
+{
+	struct cpufreq_policy *policy = cpufreq_cpu_get(0);
+	policy->max = 2265600;
+}
+DECLARE_DELAYED_WORK(booststop_wq, bootboost_stop);
+
 static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 {
 	int cur_freq;
@@ -354,18 +361,24 @@ static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 		policy->cpuinfo.max_freq = CONFIG_MSM_CPU_FREQ_MAX;
 #endif
 	}
-#ifdef CONFIG_MSM_CPU_FREQ_SET_MIN_MAX
-	policy->min = CONFIG_MSM_CPU_FREQ_MIN;
-	policy->max = CONFIG_MSM_CPU_FREQ_MAX;
-#endif
-#ifdef CONFIG_SEC_DVFS
-	cpuinfo_max_freq = policy->cpuinfo.max_freq;
-	cpuinfo_min_freq = policy->cpuinfo.min_freq;
+
+    policy->max = 2611200;
+	policy->min = 300000;
+
+	schedule_delayed_work(&booststop_wq, msecs_to_jiffies(90000));
+
+//#ifdef CONFIG_MSM_CPU_FREQ_SET_MIN_MAX
+//	policy->min = CONFIG_MSM_CPU_FREQ_MIN;
+//	policy->max = CONFIG_MSM_CPU_FREQ_MAX;
+//#endif
+//#ifdef CONFIG_SEC_DVFS
+//	cpuinfo_max_freq = policy->cpuinfo.max_freq;
+//	cpuinfo_min_freq = policy->cpuinfo.min_freq;
 	/*For debugging
 	pr_info("cpufreq: cpuinfo_max_freq: %d\n", cpuinfo_max_freq);
 	pr_info("cpufreq: cpuinfo_min_freq: %d\n", cpuinfo_min_freq);
 	*/
-#endif
+//#endif
 
 	if (is_clk)
 		cur_freq = clk_get_rate(cpu_clk[policy->cpu])/1000;
